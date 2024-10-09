@@ -59,7 +59,14 @@ const softDelete = objectionSoftDelete({
     columnName: 'deleted_at',
     deletedValue: new Date(),
     notDeletedValue: null,
-});
+    // You can optionally specify custom rules for whereDeleted or whereNotDeleted
+    whereNotDeleted: () => {
+      return Model.query().where('deleted_at', '>',  moment().toISOString());
+    },
+    whereDeleted: () => {
+      return Model.query().whereNot('deleted_at', '>',  moment().toISOString());
+    },
+})(Model);
 
 // Inject the plugin to the model
 class User extends softDelete(Model) {

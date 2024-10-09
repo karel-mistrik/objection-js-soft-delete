@@ -40,15 +40,27 @@ const softDelete = (incomingOptions) => {
                 if (options.deletedValue === true) {
                     return this.where(columnRef, options.deletedValue());
                 }
-                // qualify the column name
-                return this.whereNot(columnRef, options.notDeletedValue());
+
+                // use custom whereDeleted function if specified
+                if (typeof options.whereDeleted === 'function') {
+                    return options.whereDeleted();
+                } else {
+                    // qualify the column name
+                    return this.whereNot(columnRef, options.notDeletedValue());
+                }
             }
 
             // provide a way to filter out deleted records without having to remember the column name
             whereNotDeleted() {
                 const columnRef = this.modelClass().ref(options.columnName);
-                // qualify the column name
-                return this.where(columnRef, options.notDeletedValue());
+
+                // use custom whereNotDeleted function if specified
+                if (typeof options.whereNotDeleted === 'function') {
+                    return options.whereNotDeleted();
+                } else {
+                    // qualify the column name
+                    return this.where(columnRef, options.notDeletedValue());
+                }
             }
         }
         return class extends Model {

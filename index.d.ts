@@ -30,6 +30,8 @@ declare module 'objection-js-soft-delete' {
         columnName: string;
         deletedValue: () => Date | boolean | number;
         notDeletedValue: () => boolean | null;
+        whereNotDeleted?(): this['ArrayQueryBuilderType'];
+        whereDeleted?(): this['ArrayQueryBuilderType'];
       }>,
     ): (model: T) => Omit<T, 'new'> & SoftDeleteStatic<T>;
   }
