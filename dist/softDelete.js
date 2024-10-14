@@ -47,8 +47,9 @@ const softDelete = incomingOptions => {
         }
 
         // use custom whereDeleted function if specified
-        if (typeof options.whereDeleted === 'function') {
-          return options.whereDeleted();
+        const baseModel = this.modelClass();
+        if (typeof baseModel.whereDeletedHelper === 'function') {
+          return baseModel.whereDeletedHelper();
         } else {
           // qualify the column name
           return this.whereNot(columnRef, options.notDeletedValue());
@@ -60,8 +61,12 @@ const softDelete = incomingOptions => {
         const columnRef = this.modelClass().ref(options.columnName);
 
         // use custom whereNotDeleted function if specified
-        if (typeof options.whereNotDeleted === 'function') {
-          return options.whereNotDeleted();
+        console.log(typeof options.whereNotDeleted);
+
+        // Call whereNotDeletedHelper from BaseModel
+        const baseModel = this.modelClass();
+        if (typeof baseModel.whereNotDeletedHelper === 'function') {
+          return baseModel.whereNotDeletedHelper();
         } else {
           // qualify the column name
           return this.where(columnRef, options.notDeletedValue());
